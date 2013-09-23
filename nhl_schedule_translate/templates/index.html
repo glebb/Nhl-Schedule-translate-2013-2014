@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>NHL Schedule translate 2013-2014</title>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}" />
+<script type=text/javascript>
+  $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
+</head>
+<body>
+  <h1>Nhl Schedule translate 2013-2014</h1>
+  <p>If you are like me, you live far from US ET -timezone, which makes it hard to check the schedule for nhl games from
+      <a href="http://www.nhl.com/ice/schedulebyseason.htm">NHL site</a>. Also, because the time difference is huge, I'm mostly interested in
+      games which are not showing in the middle of the night locally. That's why I created this tool. It can filter the games you are interested in,
+      by team and by "on-air" -hours. By default it will show games which start between 7:00 and 22:30. You can also set the timezone, if you don't live in
+      Finland. Check the list of timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.
+  </p>
+	<form>
+	<p>
+        <input type="text" id="timezone" value='Europe/Helsinki'> - Timezone (required) <br />
+        <input type="text" id="start" value='7:00'> - Start from (required)<br /> 
+        <input type="text" id="end" value='22:30'> - End by (required)<br />        
+        
+        <select id="team">
+            <option value="">--ALL TEAMS--</option>
+            <option value="Nashville">Nashville</option>
+            <option value="Chicago">Chicago</option>
+            <option value="Philadelphia">Philadelphia</option>
+            <option value="Winnipeg">Winnipeg</option>
+            <option value="Vancouver">Vancouver</option>
+            <option value="Montréal">Montréal</option>
+            <option value="Calgary">Calgary</option>
+            <option value="Carolina">Carolina</option>
+            <option value="Columbus">Columbus</option>
+            <option value="Phoenix">Phoenix</option>
+            <option value="Pittsburgh">Pittsburgh</option>
+            <option value="NY Islanders">NY Islanders</option>
+            <option value="Dallas">Dallas</option>
+            <option value="Los Angeles">Los Angeles</option>
+            <option value="Toronto">Toronto</option>
+            <option value="San Jose">San Jose</option>
+            <option value="Florida">Florida</option>
+            <option value="Detroit">Detroit</option>
+            <option value="Minnesota">Minnesota</option>
+            <option value="Anaheim">Anaheim</option>
+            <option value="Ottawa">Ottawa</option>
+            <option value="Tampa Bay">Tampa Bay</option>
+            <option value="Buffalo">Buffalo</option>
+            <option value="St. Louis">St. Louis</option>
+            <option value="Colorado">Colorado</option>
+            <option value="New Jersey">New Jersey</option>
+            <option value="Boston">Boston</option>
+            <option value="Edmonton">Edmonton</option>
+            <option value="Washington">Washington</option>
+            <option value="NY Rangers">NY Rangers</option>
+        </select> - Team <br />
+               
+    <button type="button" id="submit">Filter games</button>
+	</p>
+	</form>
+    
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>window.jQuery || document.write('<script src="{{
+  	url_for('static', filename='jquery.min.js') }}">\x3C/script>')</script>
+    
+    <script type=text/javascript>
+      $(function() {
+        $('button#submit').bind('click', function() {
+          $.getJSON($SCRIPT_ROOT + '/_get_schedule', {
+            TARGET_TIMEZONE : $('#timezone').val(),
+            START_FROM : $('#start').val(),
+            END_BY : $('#end').val(),
+            TEAM_FILTER : $('#team').val()
+          }, function(data) {
+              $("#result").empty();
+              if(typeof data.games === 'undefined') return;
+              for (index = 0; index < data.games.length; ++index) {
+                  var str = (index + 1) +". ";
+                  str = str + data.games[index].target_time;
+                  tagline = data.games[index].home_team + ' vs ' + data.games[index].visiting_team;
+                  str = str + ' ' + tagline
+                  str = str + ' <a href="_get_ical?tagline=' + tagline + '&time=' + data.games[index].target_time + '&timezone=' + $('#timezone').val() + '">ical</a>'
+                  $("#result").append('<li>' + str + '</li');
+                  
+              }
+          });
+          return false;
+        });
+      });
+    </script>
+
+	<ul id=result></ul>
+    
+
+
+</body>
+</html>

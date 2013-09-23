@@ -19,33 +19,22 @@ def main():
     try:
         games = pickle.load( open( SCHEDULE_DATA, "rb" ) )
     except IOError:
-        games = _save_schedule_from_web()
+        games = save_schedule_from_web()
     
     i = 1
+    games = filter_games(games, TARGET_TIMEZONE, TEAM_FILTER, START_FROM, END_BY)
     for game in games:
-        date = game['date']
-        visiting_team = game['visiting_team']
-        home_team = game['home_team']
-        time = game['time']
-    
-        if TEAM_FILTER:
-            if not home_team == TEAM_FILTER and not visiting_team == TEAM_FILTER:
-                continue
-        usa_et_time = parser.parse(date + ' ' + time).replace(tzinfo=pytz.timezone('US/Eastern'))
-        target_time = usa_et_time.astimezone(TARGET_TIMEZONE)
+        tagline = game['home_team'] + ' vs ' + game['visiting_team']
+        print str(i) + '. ' + game['target_time'].strftime("%A %d.%m.%Y %H:%M") + ' ' + tagline
+        i += 1
 
-        if target_time.time() >= START_FROM and target_time.time() <= END_BY:
-            tagline = home_team + ' vs ' + visiting_team
-            print str(i) + '. ' + target_time.strftime("%A %d.%m.%Y %H:%M") + ' ' + tagline
-            i += 1
+        if WRITE_ICAL_ENTRIES:
+            cal = create_ical(tagline, game['target_time'])
+            f = open(game['target_time'].strftime("%Y-%m-%d - ") + tagline + '.ics', 'wb')
+            f.write(cal.to_ical())
+            f.close()
 
-            if WRITE_ICAL_ENTRIES:
-                cal = _create_ical(tagline, target_time)
-                f = open(target_time.strftime("%Y-%m-%d - ") + tagline + '.ics', 'wb')
-                f.write(cal.to_ical())
-                f.close()
-
-def _save_schedule_from_web():
+def save_schedule_from_web():
     games = []
 
     data = urllib2.urlopen('http://www.nhl.com/ice/schedulebyseason.htm').read()
@@ -68,7 +57,7 @@ def _parse_game_entry_from(td):
     item['time'] = str(game_info_cells[3].div.string)
     return item
 
-def _create_ical(tagline, target_time):
+def create_ical(tagline, target_time):
     cal = icalendar.Calendar()
     event = icalendar.Event()
     event.add('summary', 'NHL: ' + tagline)
@@ -76,6 +65,24 @@ def _create_ical(tagline, target_time):
     event.add('dtend', target_time + datetime.timedelta(hours=2, minutes=30))
     cal.add_component(event)
     return cal
+    
+def filter_games(games, target_timezone, team_filter, start_from, end_by):
+    temp = []
+    for game in games:
+        date = game['date']
+        visiting_team = game['visiting_team']
+        home_team = game['home_team']
+        time = game['time']
+    
+        if team_filter:
+            if not home_team == team_filter and not visiting_team == team_filter:
+                continue
+        usa_et_time = parser.parse(date + ' ' + time).replace(tzinfo=pytz.timezone('US/Eastern'))
+        target_time = usa_et_time.astimezone(target_timezone)
+        if target_time.time() >= start_from and target_time.time() <= end_by:
+            game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
+            temp.append(game)
+    return temp
     
 if __name__ == '__main__':
     main()
