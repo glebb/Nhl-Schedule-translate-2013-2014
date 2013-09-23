@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>NHL Schedule translate 2013-2014</title>
+        <title>NHL Schedule 2013-2014</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -54,7 +54,7 @@ var update = function() {
 <body>
   <div class="header-container">
       <header class="wrapper clearfix">
-          <h1 class="title">Nhl Schedule translate 2013-2014</h1>
+          <h1 class="title">Nhl Schedule 2013-2014<br />with timezones</h1>
           <nav>
               <!--<ul>
                   <li><a href="#">nav ul li a</a></li>
@@ -67,14 +67,7 @@ var update = function() {
 
   <div class="main-container">
       <div class="main wrapper clearfix">
-  
-  <p>If you are like me, you live far away from US ET -timezone, which makes it hard to check the schedule for nhl games from
-      <a href="http://www.nhl.com/ice/schedulebyseason.htm">NHL site</a>. Also because the time difference is so huge, at least I am mostly interested in
-      games which are not showing in the middle of the night locally. Well, this tool can translate the timezone to what you prefer, and additionally filter the games you are interested in,
-      based on team and on "on-air" -hours. By default it will show games which start between 7:00 and 22:30. If you don't live in
-      Finland, check the list of timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.
-  </p>
-	<form>
+  <form>
 	<p>
         <input type="text" id="timezone" value='Europe/Helsinki'> - Timezone (required) <br />
         <input type="text" id="start" value='7:00'> - Start from (required)<br /> 
@@ -119,6 +112,14 @@ var update = function() {
   </p>
 	</form>
 	<ol id=result></ol>
+    
+  <p>If you are like me, you live far away from US ET -timezone, which makes it hard to check the schedule for nhl games from
+      <a href="http://www.nhl.com/ice/schedulebyseason.htm">NHL site</a>. Also because the time difference is so huge, at least I am mostly interested in
+      games which are not showing in the middle of the night locally. Well, this tool can translate the timezone to what you prefer, and additionally filter the games you are interested in,
+      based on team and on "on-air" -hours. By default it will show games which start between 7:00 and 22:30. If you don't live in
+      Finland, check the list of acceptable timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.
+  </p>
+  <p>As a bonus you can save the game to your favourite calendar by downloading the ical item.</p>
     
             </div> <!-- #main -->
         </div> <!-- #main-container -->
