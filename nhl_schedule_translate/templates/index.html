@@ -7,6 +7,34 @@
 <script type=text/javascript>
   $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 </script>
+
+<script src="{{url_for('static', filename='jquery.min.js')}}"></script>
+
+<script type=text/javascript>
+  $(function() {
+    $('button#submit').bind('click', function() {
+      $.getJSON($SCRIPT_ROOT + '/_get_schedule', {
+        TARGET_TIMEZONE : $('#timezone').val(),
+        START_FROM : $('#start').val(),
+        END_BY : $('#end').val(),
+        TEAM_FILTER : $('#team').val()
+      }, function(data) {
+          $("#result").empty();
+          if(typeof data.games === 'undefined') return;
+          for (index = 0; index < data.games.length; ++index) {
+              var str = (index + 1) +". ";
+              str = str + data.games[index].target_time;
+              tagline = data.games[index].home_team + ' vs ' + data.games[index].visiting_team;
+              str = str + ' ' + tagline
+              str = str + ' <a href="_get_ical?tagline=' + tagline + '&time=' + data.games[index].target_time + '&timezone=' + $('#timezone').val() + '">ical</a>'
+              $("#result").append('<li>' + str + '</li');
+              
+          }
+      });
+      return false;
+    });
+  });
+</script>
 </head>
 <body>
   <h1>Nhl Schedule translate 2013-2014</h1>
@@ -59,37 +87,7 @@
     <button type="button" id="submit">Filter games</button>
 	</p>
 	</form>
-    
-	<script src="{{url_for('static', filename='jquery.min.js')}}"></script>
-    
-    <script type=text/javascript>
-      $(function() {
-        $('button#submit').bind('click', function() {
-          $.getJSON($SCRIPT_ROOT + '/_get_schedule', {
-            TARGET_TIMEZONE : $('#timezone').val(),
-            START_FROM : $('#start').val(),
-            END_BY : $('#end').val(),
-            TEAM_FILTER : $('#team').val()
-          }, function(data) {
-              $("#result").empty();
-              if(typeof data.games === 'undefined') return;
-              for (index = 0; index < data.games.length; ++index) {
-                  var str = (index + 1) +". ";
-                  str = str + data.games[index].target_time;
-                  tagline = data.games[index].home_team + ' vs ' + data.games[index].visiting_team;
-                  str = str + ' ' + tagline
-                  str = str + ' <a href="_get_ical?tagline=' + tagline + '&time=' + data.games[index].target_time + '&timezone=' + $('#timezone').val() + '">ical</a>'
-                  $("#result").append('<li>' + str + '</li');
-                  
-              }
-          });
-          return false;
-        });
-      });
-    </script>
-
 	<ul id=result></ul>
-    
     <p><a href="https://github.com/glebb/Nhl-Schedule-translate-2013-2014">source</a>
     
 
