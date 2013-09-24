@@ -25,10 +25,11 @@ var update = function() {
 $(function() {
   $('button#submit').bind('click', update);
   update();
+  $('#time').change(function() {
+      $('#start').attr('disabled',! this.checked)
+      $('#end').attr('disabled',! this.checked)      
+  });
 });
 
-$('#time').change(function() {
-    $('#start').attr('disabled',! this.checked)
-    $('#end').attr('disabled',! this.checked)      
-});
+
 
