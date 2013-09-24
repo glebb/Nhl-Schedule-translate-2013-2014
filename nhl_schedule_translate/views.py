@@ -33,10 +33,15 @@ def get_schedule():
     try:
         timezone = pytz.timezone(request.args.get('TARGET_TIMEZONE', 0))
         team_filter = request.args.get('TEAM_FILTER', 0).encode('utf-8')
-        temp = request.args.get('START_FROM', 0)
-        start_from = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
-        temp = request.args.get('END_BY', 0)
-        end_by = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
+        filter_time = request.args.get('FILTER_TIME', 0)
+        if filter_time == "true":
+            temp = request.args.get('START_FROM', 0)
+            start_from = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
+            temp = request.args.get('END_BY', 0)
+            end_by = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
+        else:
+            start_from = datetime.time(hour=0, minute=0)
+            end_by = datetime.time(hour=23, minute=59)
     except:
         pass
     else:
