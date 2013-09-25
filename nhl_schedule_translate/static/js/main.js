@@ -15,7 +15,17 @@ var update = function() {
           str = str + ' <a href="_get_ical?tagline=' 
             + tagline + '&time=' + data.games[index].target_time 
             + '&timezone=' + $('#timezone').val() + '">ic</a>'
-          $("#result").append('<li>' + str + '</li>');
+
+            listItem = jQuery('<li />', {
+            });
+            listItem.append(str);
+            wd = data.games[index].weekday;
+            
+            if (!$('#time').is(':checked') && (wd == 4 || wd == 5)) {
+              listItem.addClass("weekend")
+            }
+            
+          $("#result").append(listItem);
       }
   });
   return false;

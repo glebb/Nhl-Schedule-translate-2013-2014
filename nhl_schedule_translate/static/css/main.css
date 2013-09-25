@@ -159,10 +159,12 @@ nav a:hover {
 
 
 .short_box {
-width: 3em;
+  width: 3em;
 }
 
-
+.weekend {
+  background-color: Azure;
+}
 
 
 

@@ -79,6 +79,7 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
                 continue
         usa_et_time = parser.parse(date + ' ' + time).replace(tzinfo=pytz.timezone('US/Eastern'))
         target_time = usa_et_time.astimezone(target_timezone)
+        game['weekday'] = target_time.weekday()
         if target_time.time() >= start_from and target_time.time() <= end_by:
             game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
             temp.append(game)
