@@ -33,12 +33,23 @@ var update = function() {
 
 
 $(function() {
-  $('button#submit').bind('click', update);
   update();
+
+  $('button#submit').bind('click', update);
+
   $('#time').change(function() {
       $('#start').attr('disabled',! this.checked)
       $('#end').attr('disabled',! this.checked)      
   });
+
+  $( "#time" ).change(update);
+    update();
+
+  $( "#team" ).change(update);
+  
+  $("#timezone").change(update);
+
+  
 });
 
 
