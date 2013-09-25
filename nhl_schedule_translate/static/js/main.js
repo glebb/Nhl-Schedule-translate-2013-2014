@@ -21,7 +21,7 @@ var update = function() {
             listItem.append(str);
             wd = data.games[index].weekday;
             
-            if (!$('#time').is(':checked') && (wd == 4 || wd == 5)) {
+            if (!$('#time').is(':checked') && data.games[index].weekend == true) {
               listItem.addClass("weekend")
             }
             

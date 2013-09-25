@@ -79,11 +79,21 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
                 continue
         usa_et_time = parser.parse(date + ' ' + time).replace(tzinfo=pytz.timezone('US/Eastern'))
         target_time = usa_et_time.astimezone(target_timezone)
-        game['weekday'] = target_time.weekday()
+        game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
+        _mark_weekend(game, target_time)
+        #game['weekday'] = target_time.weekday()
         if target_time.time() >= start_from and target_time.time() <= end_by:
-            game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
             temp.append(game)
     return temp
+    
+def _mark_weekend(game, target_time):
+    date = target_time
+    game['weekend'] = False
+    if date.weekday() == 4:
+        if date.hour > 16 and date.hour <= 23:
+            game['weekend'] = True
+    if date.weekday() == 5 or date.weekday() == 6:
+        game['weekend'] = True
     
 if __name__ == '__main__':
     main()
