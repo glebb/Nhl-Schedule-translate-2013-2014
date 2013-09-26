@@ -41,13 +41,6 @@
     <div class="main-container">
       <div class="main wrapper clearfix">
         <form>
-        	<p>
-            <label for="timezone">Timezone:</label>
-            <input type="text" id="timezone" value='Europe/Helsinki'> <br />
-            <input type="checkbox" id="time" checked="checked" />         
-            <label for="time">Start of the game between:</label>
-            <input class="short_box" type="text" id="start" value='7:00'> - 
-            <input class="short_box" type="text" id="end" value='22:30'><br />        
             <label for="team">Games for:</label>
             <select id="team">
               <option value="">--ALL TEAMS--</option>
@@ -81,8 +74,13 @@
               <option value="Edmonton">Edmonton</option>
               <option value="Washington">Washington</option>
               <option value="NY Rangers">NY Rangers</option>
-            </select>
-          </p>
+            </select> <br />            
+            <label for="timezone">Timezone:</label>
+            <input type="text" id="timezone" value='Europe/Helsinki'> <br />
+            <input type="checkbox" id="time" checked="checked" />         
+            <label for="time">Start of the game between:</label>
+            <input class="short_box" type="text" id="start" value='7:00'> - 
+            <input class="short_box" type="text" id="end" value='22:30'><br />      
       	</form>
       	
         <ol id="result"></ol>
