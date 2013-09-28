@@ -1,5 +1,5 @@
 var update = function() {
-  $.getJSON($SCRIPT_ROOT + '/_get_schedule', {
+  $.getJSON($SCRIPT_ROOT + '_get_schedule', {
     TARGET_TIMEZONE : $('#timezone').val(),
     START_FROM : $('#start').val(),
     END_BY : $('#end').val(),
