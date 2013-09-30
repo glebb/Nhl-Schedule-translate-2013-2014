@@ -35,19 +35,17 @@ var update = function() {
 $(function() {
   update();
 
-  $('button#submit').bind('click', update);
-
   $('#time').change(function() {
       $('#start').attr('disabled',! this.checked)
-      $('#end').attr('disabled',! this.checked)      
+      $('#end').attr('disabled',! this.checked)
+      update();      
   });
 
-  $( "#time" ).change(update);
-    update();
-
+  $('button#submit').bind('click', update);
   $( "#team" ).change(update);
-  
-  $("#timezone").change(update);
+  $( "#timezone" ).change(update);
+  $( "#start" ).change(update);
+  $( "#end" ).change(update);
 
   
 });
