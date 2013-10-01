@@ -46,9 +46,14 @@ $(function() {
   $( "#timezone" ).change(update);
   $( "#start" ).change(update);
   $( "#end" ).change(update);
-
-  
 });
 
+$(document).ajaxStart(function(){
+  $("#result").hide();
+  $("#loading").show();
+}).ajaxStop(function(){
+  $("#loading").hide();
+  $("#result").show();
+});
 
 

@@ -82,7 +82,11 @@
             <input class="short_box" type="text" id="start" value='7:00'> - 
             <input class="short_box" type="text" id="end" value='22:30'><br />      
       	</form>
-      	
+        
+        <div id="loading">
+          <p><img src="{{ url_for('static', filename='img/ajax-loader.gif')}}" /> Please Wait...</p>
+        </div>
+        
         <ol id="result"></ol>
   
         <p>If you are like me, you are mostly interested in NHL games, which are not showing in the middle of the night (locally) during the work week. What I am interested in is games during the weekend, or games that start early enough for me to watch. This tool lists games in preferred timezone (showing the game starting time in your local time), and filters the games by team. By default it will show games which start between 7:00 and 22:30 in Finland. If you disable the time range, it will highlight games for weekends (when losing a night's sleep is not so bad). If you don't live in Finland, check the list of acceptable timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.</p>
