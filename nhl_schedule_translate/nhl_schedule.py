@@ -98,9 +98,17 @@ def _mark_weekend(game, target_time):
 def _mark_past(game, target_time, target_timezone):
     game['inPast'] = False
     now = datetime.datetime.now().replace(tzinfo=target_timezone)
-    difference = now - target_time
-    if difference.total_seconds() / 60 > 150:
+    difference = _total_seconds(now - target_time)
+    if difference / 60 > 150:
         game['inPast'] = True
     
+def _total_seconds(deltatime):
+    if hasattr(deltatime, "total_seconds"):
+        duration = deltatime.total_seconds()
+    else: 
+        duration = (deltatime.microseconds + (deltatime.seconds +  deltatime.days * 24 * 3600) * 10**6) / 10**6  
+    return duration  
+
+
 if __name__ == '__main__':
     main()
