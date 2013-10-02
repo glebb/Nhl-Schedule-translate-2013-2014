@@ -163,7 +163,8 @@ nav a:hover {
 }
 
 .weekend {
-  background-color: Azure;
+  color: OrangeRed;
+  font-weight: bold;
 }
 
 

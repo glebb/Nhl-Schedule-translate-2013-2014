@@ -9,23 +9,33 @@ var update = function() {
       $("#result").empty();
       if(typeof data.games === 'undefined') return;
       for (index = 0; index < data.games.length; ++index) {
+        if (data.games[index].inPast == true && $('#excludePastGames').is(':checked') )
+        {
+          continue;
+        }
+
         var str = data.games[index].target_time;
-          tagline = data.games[index].home_team + ' vs ' + data.games[index].visiting_team;
-          str = str + ' ' + tagline
+
+        tagline = data.games[index].home_team + ' vs ' + data.games[index].visiting_team;
+        str = str + ' ' + tagline
+        if (!data.games[index].inPast)
+        {
           str = str + ' <a href="_get_ical?tagline=' 
             + tagline + '&time=' + data.games[index].target_time 
             + '&timezone=' + $('#timezone').val() + '">ic</a>'
+        }
 
-            listItem = jQuery('<li />', {
-            });
-            listItem.append(str);
-            wd = data.games[index].weekday;
-            
-            if (!$('#time').is(':checked') && data.games[index].weekend == true) {
-              listItem.addClass("weekend")
-            }
-            
-          $("#result").append(listItem);
+        listItem = jQuery('<li />', {
+        });
+        listItem.append(str);
+        wd = data.games[index].weekday;
+        
+        if (!$('#time').is(':checked') && data.games[index].weekend == true) {
+          listItem.addClass("weekend")
+        }
+        
+        $("#result").append(listItem);
+          
       }
   });
   return false;
@@ -41,6 +51,7 @@ $(function() {
       update();      
   });
 
+  $( "#excludePastGames" ).change(update);
   $('button#submit').bind('click', update);
   $( "#team" ).change(update);
   $( "#timezone" ).change(update);

@@ -81,7 +81,7 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
         target_time = usa_et_time.astimezone(target_timezone)
         game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
         _mark_weekend(game, target_time)
-        #game['weekday'] = target_time.weekday()
+        _mark_past(game, target_time, target_timezone)
         if target_time.time() >= start_from and target_time.time() <= end_by:
             temp.append(game)
     return temp
@@ -94,6 +94,13 @@ def _mark_weekend(game, target_time):
             game['weekend'] = True
     if date.weekday() == 5 or date.weekday() == 6:
         game['weekend'] = True
+
+def _mark_past(game, target_time, target_timezone):
+    game['inPast'] = False
+    now = datetime.datetime.now().replace(tzinfo=target_timezone)
+    difference = now - target_time
+    if difference.total_seconds() / 60 > 150:
+        game['inPast'] = True
     
 if __name__ == '__main__':
     main()
