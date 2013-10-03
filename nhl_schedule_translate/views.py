@@ -4,6 +4,7 @@ from flask import request
 from flask import send_from_directory
 from flask import make_response
 from flask import abort
+from flask import session
 from dateutil import parser
 import os
 import datetime
@@ -12,6 +13,7 @@ import pytz
 
 from nhl_schedule_translate import app
 from nhl_schedule_translate.nhl_schedule import *
+
 
 @app.after_request
 def add_header(response):
@@ -25,20 +27,33 @@ def add_header(response):
 
 @app.route('/')
 def index():
+    session.permanent = True
+    if not 'timezone' in session:
+        session['timezone'] = 'Europe/Helsinki'
+    if not 'temp_start_from' in session:
+        session['temp_start_from'] = '17:00'
+    if not 'temp_end_by' in session:
+        session['temp_end_by'] = '21:30'
+    if not 'filter_time' in session:
+        session['filter_time'] = 'true'
+        
     return render_template('index.html', temp=None)
 
 @app.route('/_get_schedule')
 def get_schedule():
     games = []
     try:
-        timezone = pytz.timezone(request.args.get('TARGET_TIMEZONE', 0))
-        team_filter = request.args.get('TEAM_FILTER', 0).encode('utf-8')
-        filter_time = request.args.get('FILTER_TIME', 0)
-        if filter_time == "true":
-            temp = request.args.get('START_FROM', 0)
-            start_from = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
-            temp = request.args.get('END_BY', 0)
-            end_by = datetime.time(hour=int(temp.split(':')[0]), minute=int(temp.split(':')[1]))
+        session['timezone'] = request.args.get('TARGET_TIMEZONE', 0) 
+        timezone = pytz.timezone(session['timezone'])
+        session['team_filter'] = unicode(request.args.get('TEAM_FILTER', 0).encode('utf-8'), 'utf8')
+        session['filter_time'] = request.args.get('FILTER_TIME', 0) == "true"
+        if session['filter_time']:
+            session['temp_start_from'] = request.args.get('START_FROM', 0)
+            start_from = datetime.time(hour=int(session['temp_start_from'].split(':')[0]),
+                 minute=int(session['temp_start_from'].split(':')[1]))
+            session['temp_end_by'] = request.args.get('END_BY', 0)
+            end_by = datetime.time(hour=int(session['temp_end_by'].split(':')[0]),
+                 minute=int(session['temp_end_by'].split(':')[1]))
         else:
             start_from = datetime.time(hour=0, minute=0)
             end_by = datetime.time(hour=23, minute=59)
@@ -49,7 +64,7 @@ def get_schedule():
             games = pickle.load( open( SCHEDULE_DATA, "rb" ) )
         except IOError:
             games = save_schedule_from_web()
-        games = filter_games(games, timezone, team_filter, start_from, end_by)
+        games = filter_games(games, timezone, session['team_filter'], start_from, end_by)
     return jsonify(games=games)
     
 @app.route('/_get_ical')    

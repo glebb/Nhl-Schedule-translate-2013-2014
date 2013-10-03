@@ -16,6 +16,7 @@
     <![endif]-->
 
     <script src="{{ url_for('static', filename='js/vendor/jquery-1.10.1.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/jquery.cookie.js')}}"></script>
     <script src="{{ url_for('static', filename='js/main.js')}}"></script>
 
     <script>
@@ -43,6 +44,9 @@
         <form>
             <label for="team">Games for:</label>
             <select id="team">
+              {% if session.team_filter %}
+              <option value="{{ session.team_filter }}">{{ session.team_filter }}</option>
+              {% endif %}
               <option value="">--ALL TEAMS--</option>
               <option value="Nashville">Nashville</option>
               <option value="Chicago">Chicago</option>
@@ -76,11 +80,11 @@
               <option value="NY Rangers">NY Rangers</option>
             </select> <br />            
             <label for="timezone">Timezone:</label>
-            <input type="text" id="timezone" value='Europe/Helsinki'> <br />
-            <input type="checkbox" id="time" />         
+            <input type="text" id="timezone" value='{{session.timezone}}' /><br />
+            <input type="checkbox" id="time" {% if session.filter_time %} checked="checked" {% endif %}/>         
             <label for="time">Start of the game between:</label>
-            <input class="short_box" type="text" id="start" value='17:00'> - 
-            <input class="short_box" type="text" id="end" value='23:30'><br />
+            <input class="short_box" type="text" id="start" value='{{session.temp_start_from}}'> - 
+            <input class="short_box" type="text" id="end" value='{{session.temp_end_by}}'><br />
             <input type="checkbox" id="excludePastGames" checked="checked" />         
             <label for="excludePastGames">Exclude games played</label>
                   
@@ -92,7 +96,7 @@
         
         <ol id="result"></ol>
   
-        <p>If you are like me, you are mostly interested in NHL games, which are not showing in the middle of the night (locally) during the work week. What I am interested in is games during the weekend, or games that start early enough for me to watch. This tool lists games in preferred timezone. By default it will show all upcoming games in Finnish time, higlighting games for weekends (when losing a night's sleep is not so bad). Additionally you can set time range for the games, if you are interested in games that start at specific times. If you don't live in Finland, check the list of acceptable timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.</p>
+        <p>This tool lists NHL games in your preferred timezone. If you are like me, you are mostly interested in games, which are not showing in the middle of the night (locally) during the work week. What I am interested in is games during the weekend, or games that start early enough for me to watch.  By default it will show all upcoming games in Finnish time, which fall inside desired timerange, higlighting games for weekends (when losing a night's sleep is not so bad). If you don't live in Finland, check the list of acceptable timezones from <a href="http://en.wikipedia.org/wiki/List_of_tz_database_time_zones">wikipedia</a>.</p>
 
         <p>As a bonus you can save the game to your favourite calendar by downloading the ical item.</p>
   

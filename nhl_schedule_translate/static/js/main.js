@@ -9,7 +9,7 @@ var update = function() {
       $("#result").empty();
       if(typeof data.games === 'undefined') return;
       for (index = 0; index < data.games.length; ++index) {
-        if (data.games[index].inPast == true && $('#excludePastGames').is(':checked') )
+        if (data.games[index].inPast && $('#excludePastGames').is(':checked') )
         {
           continue;
         }
@@ -30,7 +30,7 @@ var update = function() {
         listItem.append(str);
         wd = data.games[index].weekday;
         
-        if (!$('#time').is(':checked') && data.games[index].weekend == true) {
+        if (data.games[index].weekend) {
           listItem.addClass("weekend")
         }
         
@@ -43,15 +43,28 @@ var update = function() {
 
 
 $(function() {
+  if (!$.cookie('excludePastGames')) {
+    $.cookie('excludePastGames', "true", { expires: 365 });    
+  }
+  
+  checked = ( $.cookie('excludePastGames')) == "true";
+  $( "#excludePastGames" ).attr('checked', checked);
+  $('#start').attr('disabled', !$('#time').attr('checked'))
+  $('#end').attr('disabled', !$('#time').attr('checked'))
+  
   update();
 
   $('#time').change(function() {
-      $('#start').attr('disabled',! this.checked)
-      $('#end').attr('disabled',! this.checked)
+      $('#start').attr('disabled', !this.checked)
+      $('#end').attr('disabled', !this.checked)
       update();      
   });
 
-  $( "#excludePastGames" ).change(update);
+  $( "#excludePastGames" ).change(function() {
+    $.cookie('excludePastGames', this.checked, { expires: 365 });
+    update();
+  });
+  
   $('button#submit').bind('click', update);
   $( "#team" ).change(update);
   $( "#timezone" ).change(update);
