@@ -82,7 +82,10 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
         game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
         _mark_weekend(game, target_time)
         _mark_past(game, target_time, target_timezone)
-        if target_time.time() >= start_from and target_time.time() <= end_by:
+        if start_from <= end_by:
+            if target_time.time() >= start_from and target_time.time() <= end_by:
+                temp.append(game)
+        elif target_time.time() <= end_by or target_time.time() >= start_from:
             temp.append(game)
     return temp
     
