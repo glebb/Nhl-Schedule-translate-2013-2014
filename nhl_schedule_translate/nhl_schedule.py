@@ -77,7 +77,9 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
         if team_filter:
             if not home_team == team_filter and not visiting_team == team_filter:
                 continue
-        usa_et_time = parser.parse(date + ' ' + time).replace(tzinfo=pytz.timezone('US/Eastern'))
+        eastern = pytz.timezone('US/Eastern')            
+        temp_time = parser.parse(date + ' ' + time)    
+        usa_et_time = eastern.localize(temp_time)
         target_time = usa_et_time.astimezone(target_timezone)
         game['target_time'] = target_time.strftime("%A %d.%m.%Y %H:%M")
         _mark_weekend(game, target_time)
