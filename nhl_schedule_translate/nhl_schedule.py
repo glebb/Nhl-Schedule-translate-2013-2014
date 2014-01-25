@@ -89,7 +89,7 @@ def filter_games(games, target_timezone, team_filter, start_from, end_by):
         _mark_weekend(game, target_time)
         _mark_past(game, target_time, target_timezone)
         if start_from <= end_by:
-            if target_time.time() >= start_from and target_time.time() <= end_by:
+            if start_from <= target_time.time() <= end_by:
                 temp.append(game)
         elif target_time.time() <= end_by or target_time.time() >= start_from:
             temp.append(game)
@@ -99,7 +99,7 @@ def _mark_weekend(game, target_time):
     date = target_time
     game['weekend'] = False
     if date.weekday() == 4:
-        if date.hour > 16 and date.hour <= 23:
+        if 16 < date.hour <= 23:
             game['weekend'] = True
     if date.weekday() == 5 or date.weekday() == 6:
         game['weekend'] = True
