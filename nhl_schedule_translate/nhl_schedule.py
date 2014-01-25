@@ -43,7 +43,8 @@ def save_schedule_from_web():
     table_cells = soup.findAll('td', {'class' : 'time'})
     for td in table_cells:
         entry = _parse_game_entry_from(td)
-        games.append(entry)
+        if entry:
+            games.append(entry)
     pickle.dump( games, open( SCHEDULE_DATA, "wb" ) )
     return games
     
@@ -51,10 +52,13 @@ def _parse_game_entry_from(td):
     item = {}
     parent_row = td.findParents('tr')[0]
     game_info_cells = parent_row.findAll('td')
-    item['date'] = str(game_info_cells[0].div.string)
-    item['visiting_team'] = str(game_info_cells[1].findAll('a')[1].string)
-    item['home_team'] = str(game_info_cells[2].findAll('a')[1].string)
-    item['time'] = str(game_info_cells[3].div.string)
+    try:
+        item['date'] = str(game_info_cells[0].div.string)
+        item['visiting_team'] = str(game_info_cells[1].findAll('a')[1].string)
+        item['home_team'] = str(game_info_cells[2].findAll('a')[1].string)
+        item['time'] = str(game_info_cells[3].div.string)
+    except IndexError:
+        return None
     return item
 
 def create_ical(tagline, target_time):
